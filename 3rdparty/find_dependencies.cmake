@@ -165,6 +165,9 @@ endfunction()
 set(ExternalProject_CMAKE_ARGS
     -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
     -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+    -DCMAKE_SYSTEM_NAME=${CMAKE_SYSTEM_NAME}
+    -DCMAKE_SYSTEM_PROCESSOR=${CMAKE_SYSTEM_PROCESSOR}
+    -DCMAKE_SYSROOT=${CMAKE_SYSROOT}
     -DCMAKE_CUDA_COMPILER=${CMAKE_CUDA_COMPILER}
     -DCMAKE_C_COMPILER_LAUNCHER=${CMAKE_C_COMPILER_LAUNCHER}
     -DCMAKE_CXX_COMPILER_LAUNCHER=${CMAKE_CXX_COMPILER_LAUNCHER}
@@ -1651,7 +1654,11 @@ else() # if(OPEN3D_USE_ONEAPI_PACKAGES)
             # Install gfortran first for compiling OpenBLAS/Lapack from source.
             message(STATUS "Building OpenBLAS with LAPACK from source")
 
-            find_program(gfortran_bin "gfortran")
+            if(LINUX_AARCH64)
+                find_program(gfortran_bin "aarch64-linux-gnu-gfortran")
+            else()
+                find_program(gfortran_bin "gfortran")
+            endif()
             if (gfortran_bin)
                 message(STATUS "gfortran found at ${gfortran}")
             else()
